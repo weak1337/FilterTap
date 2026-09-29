@@ -42,7 +42,7 @@ static void Inspect(const NET_BUFFER_LIST* nbl, BOOLEAN outbound)
 
     KIRQL irql;
     KeAcquireSpinLock(&gLock, &irql);
-    /*
+    
     if (eth == 0x0800)
     {
         UCHAR* q = (UCHAR*)NdisGetDataBuffer(nb, 34, b, 1, 0);
@@ -74,13 +74,14 @@ static void Inspect(const NET_BUFFER_LIST* nbl, BOOLEAN outbound)
             if (gHaveGwIp) DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL, "FilterTap: got GW IP\n");
         }
     }
-    */
+    
+    //Not actively used just POC
     if ( eth == 0x0800 && outbound )
     {
         UCHAR  dbuf[320];
         ULONG  avail = NET_BUFFER_DATA_LENGTH( nb );
         ULONG  want = avail < sizeof( dbuf ) ? avail : sizeof( dbuf );
-        if ( want < 14 + 20 + 8 + 12 ) goto dns_done;  // too small to be DNS
+        if ( want < 14 + 20 + 8 + 12 ) goto dns_done;
 
         UCHAR* pkt = (UCHAR*)NdisGetDataBuffer( nb, want, dbuf, 1, 0 );
         if ( !pkt ) goto dns_done;
@@ -103,7 +104,7 @@ static void Inspect(const NET_BUFFER_LIST* nbl, BOOLEAN outbound)
                 if ( ( flags & 0x8000 ) == 0 && qd >= 1 )
                 {
                     UCHAR* name = dns + 12;
-                    UCHAR* end = pkt + want;               // <-- was sizeof(dbuf)
+                    UCHAR* end = pkt + want;
                     CHAR   out[256];
                     ULONG  oi = 0;
 
@@ -223,6 +224,7 @@ static void NTAPI Unload(PDRIVER_OBJECT drv)
 extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT drv, PUNICODE_STRING reg)
 {
     DbgPrintEx( DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL, "LOADED" );
+
     UNREFERENCED_PARAMETER(reg);
     drv->DriverUnload = Unload;
     KeInitializeSpinLock(&gLock);
