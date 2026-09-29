@@ -1,0 +1,42 @@
+# CMake build output
+/build/
+/out/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CMakeUserPresets.json
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+_deps/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln
+*.vcxproj*
+
+# Clangd / IDE caches
+.cache/
+.clangd/
+
+# Test-signing artifacts (private key + public cert, never commit)
+*.pfx
+*.cer
+*.pvk
+*.snk
+*.p12
+
+# Build artifacts
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.sys
+*.tlog
+*.log
